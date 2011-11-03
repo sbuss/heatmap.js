@@ -41,6 +41,7 @@ HeatmapOverlay.prototype.onRemove = function(){
 }
 
 HeatmapOverlay.prototype.draw = function(){
+    console.log("drawing");
     
     var overlayProjection = this.getProjection();
     var currentBounds = this.map.getBounds();
@@ -57,14 +58,16 @@ HeatmapOverlay.prototype.draw = function(){
 		var len = this.latlngs.length,
 		projection = this.getProjection();
 
+                var c = 0;
 		var d = {
-			max: this.heatmap.store.max,
+			//max: this.heatmap.store.max,
 			data: []
 		};
 
 		while(len--){
 			var latlng = this.latlngs[len].latlng;
 			if(!currentBounds.contains(latlng)) { continue; }
+                        c++;
 			
 			// DivPixel is pixel in overlay pixel coordinates... we need
 			// to transform to screen coordinates so it'll match the canvas
@@ -80,6 +83,9 @@ HeatmapOverlay.prototype.draw = function(){
 			    count: this.latlngs[len].c
 			});
 		}
+                d.max = Math.log(c)/Math.log(10);
+                console.log("adding " + d.data.length + " datapoints");
+                console.log("d max is " + d.max);
 		this.heatmap.store.setDataSet(d);
 	}
 
